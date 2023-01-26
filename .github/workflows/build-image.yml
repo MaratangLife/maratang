@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - 'main'
+      - 'maratang'
   pull_request:
     paths:
       - .github/workflows/build-image.yml
