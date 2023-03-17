@@ -111,6 +111,8 @@ Rails.application.routes.draw do
 
   resource :inbox, only: [:create], module: :activitypub
 
+  get '/:encoded_at(*path)', to: redirect("/@%{path}"), constraints: { encoded_at: /%40/ }
+
   constraints(username: /[^@\/.]+/) do
     get '/@:username', to: 'accounts#show', as: :short_account
     get '/@:username/with_replies', to: 'accounts#show', as: :short_account_with_replies
@@ -475,7 +477,9 @@ Rails.application.routes.draw do
         resources :list, only: :show
       end
 
-      resources :streaming, only: [:index]
+      get '/streaming', to: 'streaming#index'
+      get '/streaming/(*any)', to: 'streaming#index'
+
       resources :custom_emojis, only: [:index]
       resources :suggestions, only: [:index, :destroy]
       resources :scheduled_statuses, only: [:index, :show, :update, :destroy]
