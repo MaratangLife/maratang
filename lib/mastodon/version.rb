@@ -9,15 +9,15 @@ module Mastodon
     end
 
     def minor
-      1
+      2
     end
 
     def patch
-      5
+      0
     end
 
     def flags
-      ENV.fetch('MASTODON_VERSION_FLAGS', '')
+      ENV['MASTODON_VERSION_FLAGS'].presence || '-beta2'
     end
 
     def suffix

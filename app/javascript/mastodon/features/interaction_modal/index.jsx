@@ -13,7 +13,7 @@ import { openModal, closeModal } from 'mastodon/actions/modal';
 import api from 'mastodon/api';
 import Button from 'mastodon/components/button';
 import { Icon }  from 'mastodon/components/icon';
-import { registrationsOpen } from 'mastodon/initial_state';
+import { registrationsOpen, sso_redirect } from 'mastodon/initial_state';
 
 const messages = defineMessages({
   loginPrompt: { id: 'interaction_modal.login.prompt', defaultMessage: 'Domain of your home server, e.g. mastodon.social' },
@@ -21,12 +21,16 @@ const messages = defineMessages({
 
 const mapStateToProps = (state, { accountId }) => ({
   displayNameHtml: state.getIn(['accounts', accountId, 'display_name_html']),
+  signupUrl: state.getIn(['server', 'server', 'registrations', 'url'], null) || '/auth/sign_up',
 });
 
 const mapDispatchToProps = (dispatch) => ({
   onSignupClick() {
-    dispatch(closeModal());
-    dispatch(openModal('CLOSED_REGISTRATIONS'));
+    dispatch(closeModal({
+        modalType: undefined,
+        ignoreFocus: false,
+      }));
+    dispatch(openModal({ modalType: 'CLOSED_REGISTRATIONS' }));
   },
 });
 
@@ -250,6 +254,9 @@ class LoginForm extends React.PureComponent {
             onFocus={this.handleFocus}
             onBlur={this.handleBlur}
             onKeyDown={this.handleKeyDown}
+            autocomplete='off'
+            autocapitalize='off'
+            spellcheck='false'
           />
 
           <Button onClick={this.handleSubmit} disabled={isSubmitting}><FormattedMessage id='interaction_modal.login.action' defaultMessage='Take me home' /></Button>
@@ -291,6 +298,7 @@ class InteractionModal extends React.PureComponent {
     url: PropTypes.string,
     type: PropTypes.oneOf(['reply', 'reblog', 'favourite', 'follow']),
     onSignupClick: PropTypes.func.isRequired,
+    signupUrl: PropTypes.string.isRequired,
   };
 
   handleSignupClick = () => {
@@ -298,7 +306,7 @@ class InteractionModal extends React.PureComponent {
   };
 
   render () {
-    const { url, type, displayNameHtml } = this.props;
+    const { url, type, displayNameHtml, signupUrl } = this.props;
 
     const name = <bdi dangerouslySetInnerHTML={{ __html: displayNameHtml }} />;
 
@@ -329,9 +337,15 @@ class InteractionModal extends React.PureComponent {
 
     let signupButton;
 
-    if (registrationsOpen) {
+    if (sso_redirect) {
       signupButton = (
-        <a href='/auth/sign_up' className='link-button'>
+        <a href={sso_redirect} data-method='post' className='link-button'>
+          <FormattedMessage id='sign_in_banner.create_account' defaultMessage='Create account' />
+        </a>
+      );
+    } else if (registrationsOpen) {
+      signupButton = (
+        <a href={signupUrl} className='link-button'>
           <FormattedMessage id='sign_in_banner.create_account' defaultMessage='Create account' />
         </a>
       );
