@@ -265,7 +265,7 @@ jobs:
           discovery.type: single-node
           xpack.security.enabled: false
         options: >-
-          --health-cmd "[ -e .nori ] || { touch .nori && bin/elasticsearch-plugin install analysis-nori || exit 1; }; curl http://localhost:9200/_cluster/health"
+          --health-cmd "curl http://localhost:9200/_cluster/health"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 10
@@ -306,6 +306,12 @@ jobs:
         with:
           path: './public'
           name: ${{ github.sha }}
+
+      - name: Install Nori Tokenizer
+        run: docker exec es bin/elasticsearch-plugin install analysis-nori
+
+      - name: Restart ElasticSearch
+        run: docker restart es
 
       - name: Set up Ruby environment
         uses: ./.github/actions/setup-ruby
