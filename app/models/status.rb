@@ -416,7 +416,7 @@ class Status < ApplicationRecord
   end
 
   def local_only_emoji
-    '👁'
+    ':S_LineMk:'
   end
 
   def status_stat
