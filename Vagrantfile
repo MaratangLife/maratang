@@ -115,6 +115,7 @@ gem install bundler foreman
 bundle install
 
 # Install node modules
+export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 sudo corepack enable
 corepack prepare
 yarn install

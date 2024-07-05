@@ -183,6 +183,7 @@ RUN \
 RUN \
 # Configure Corepack
   rm /usr/local/bin/yarn*; \
+  export COREPACK_ENABLE_DOWNLOAD_PROMPT=0; \
   corepack enable; \
   corepack prepare --activate;
 
