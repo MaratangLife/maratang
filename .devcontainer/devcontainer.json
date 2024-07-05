@@ -30,7 +30,7 @@
   },
 
   "onCreateCommand": "git config --global --add safe.directory ${containerWorkspaceFolder}",
-  "postCreateCommand": "bin/setup",
+  "postCreateCommand": "export COREPACK_ENABLE_DOWNLOAD_PROMPT=0 && bin/setup",
   "waitFor": "postCreateCommand",
 
   "customizations": {
