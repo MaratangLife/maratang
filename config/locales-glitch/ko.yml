@@ -38,5 +38,10 @@ ko:
       title: 사용자 확인
   generic:
     use_this: 사용하기
+  notification_mailer:
+    reaction:
+      body: "%{name} 님이 내 게시물에 반응했습니다:"
+      subject: "%{name} 님이 내 게시물에 반응했습니다"
+      title: 새 반응
   settings:
     flavours: 풍미
