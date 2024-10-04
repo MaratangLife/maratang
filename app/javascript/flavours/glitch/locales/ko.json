@@ -156,5 +156,6 @@
   "status.show_filter_reason": "그냥 표시하기",
   "status.show_less": "접기",
   "status.show_more": "더보기",
-  "status.uncollapse": "펼치기"
+  "status.uncollapse": "펼치기",
+  "notification.reaction": "{name} 님이 내 게시물에 반응했습니다"
 }
