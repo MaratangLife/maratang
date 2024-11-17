@@ -154,5 +154,6 @@
   "status.is_poll": "이 글은 설문입니다",
   "status.local_only": "당신의 서버에서만 보입니다",
   "status.show_filter_reason": "그냥 표시하기",
-  "status.uncollapse": "펼치기"
+  "status.uncollapse": "펼치기",
+  "notification.reaction": "{name} 님이 내 게시물에 반응했습니다"
 }

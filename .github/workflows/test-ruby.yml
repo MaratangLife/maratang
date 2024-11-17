@@ -446,6 +446,12 @@ jobs:
       - name: Set up Javascript environment
         uses: ./.github/actions/setup-javascript
 
+      - name: Install Nori Tokenizer
+        run: docker exec es bin/elasticsearch-plugin install analysis-nori
+
+      - name: Restart ElasticSearch
+        run: docker restart es
+
       - name: Load database schema
         run: './bin/rails db:create db:schema:load db:seed'
 
