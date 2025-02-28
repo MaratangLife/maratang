@@ -7,15 +7,7 @@ export function Compose () {
 }
 
 export function Notifications () {
-  return import(/* webpackChunkName: "flavours/glitch/async/notifications_v1" */'../../notifications');
-}
-
-export function Notifications_v2 () {
-  return import(/* webpackChunkName: "flavours/glitch/async/notifications_v2" */'../../notifications_v2');
-}
-
-export function NotificationsWrapper () {
-  return import(/* webpackChunkName: "flavours/glitch/async/notifications" */'../../notifications_wrapper');
+  return import(/* webpackChunkName: "flavours/glitch/async/notifications" */'../../notifications_v2');
 }
 
 export function HomeTimeline () {
@@ -174,8 +166,12 @@ export function Directory () {
   return import(/* webpackChunkName: "features/glitch/async/directory" */'../../directory');
 }
 
-export function Onboarding () {
-  return import(/* webpackChunkName: "features/glitch/async/onboarding" */'../../onboarding');
+export function OnboardingProfile () {
+  return import(/* webpackChunkName: "features/glitch/async/onboarding" */'../../onboarding/profile');
+}
+
+export function OnboardingFollows () {
+  return import(/* webpackChunkName: "features/glitch/async/onboarding" */'../../onboarding/follows');
 }
 
 export function CompareHistoryModal () {
@@ -184,6 +180,10 @@ export function CompareHistoryModal () {
 
 export function Explore () {
   return import(/* webpackChunkName: "flavours/glitch/async/explore" */'../../explore');
+}
+
+export function Search () {
+  return import(/* webpackChunkName: "features/glitch/async/explore" */'../../search');
 }
 
 export function FilterModal () {
@@ -208,6 +208,10 @@ export function About () {
 
 export function PrivacyPolicy () {
   return import(/*webpackChunkName: "features/glitch/async/privacy_policy" */'../../privacy_policy');
+}
+
+export function TermsOfService () {
+  return import(/*webpackChunkName: "features/glitch/async/terms_of_service" */'../../terms_of_service');
 }
 
 export function NotificationRequests () {
