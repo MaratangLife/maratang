@@ -96,6 +96,7 @@ RUN \
 --mount=type=cache,id=yarn-cache-${TARGETPLATFORM},target=/usr/local/share/.cache/yarn,sharing=locked \
   # Configure Corepack
   rm /usr/local/bin/yarn*; \
+  export COREPACK_ENABLE_DOWNLOAD_PROMPT=0; \
   corepack enable; \
   corepack prepare --activate;
 
