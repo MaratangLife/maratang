@@ -3,6 +3,7 @@ body {
   font-family: 'Splat2K', mastodon-font-sans-serif, sans-serif !important;
 }
 
+/*
 .layout-single-column .account-card__title__avatar .account__avatar,
 .layout-single-column .account-card__title__avatar img,
 .layout-single-column .account__avatar > img,
@@ -18,7 +19,7 @@ body.embed .detailed-status__display-avatar > img {
   background-color: transparent;
   border: 0;
 }
-
+*/
 @media screen and (width >= 890px) {
   body::before {
     z-index: -1;
