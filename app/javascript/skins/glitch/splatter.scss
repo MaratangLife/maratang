@@ -1,1 +1,4 @@
-@import '@/skins/glitch/splatter/common';
+@use '@/styles/splatter/variables';
+@use '@/flavours/glitch/styles/application';
+@import '@/styles/fonts/splat2k';
+@import '@/styles/splatter/diff';
