@@ -71,7 +71,19 @@ class StatusCacheHydrator
     payload[:bookmarked] = Bookmark.exists?(account_id: account_id, status_id: status.id)
     payload[:pinned]     = StatusPin.exists?(account_id: account_id, status_id: status.id) if status.account_id == account_id
     payload[:filtered]   = mapped_applied_custom_filter(account_id, status)
+    # TODO: performance optimization by not loading `Account` twice
+    payload[:quote_approval][:current_user] = status.quote_policy_for_account(Account.find_by(id: account_id)) if payload[:quote_approval]
     payload[:quote] = hydrate_quote_payload(payload[:quote], status.quote, account_id, nested:) if payload[:quote]
+
+    # Nested statuses are more likely to have a stale cache
+    fill_status_stats(payload, status) if nested
+  end
+
+  def fill_status_stats(payload, status)
+    payload[:replies_count] = status.replies_count
+    payload[:reblogs_count] = status.untrusted_reblogs_count || status.reblogs_count
+    payload[:favourites_count] = status.untrusted_favourites_count || status.favourites_count
+    payload[:quotes_count] = status.quotes_count
   end
 
   def hydrate_quote_payload(empty_payload, quote, account_id, nested: false)
