@@ -6,6 +6,7 @@ import classNames from 'classnames';
 import { Helmet } from 'react-helmet';
 import { NavLink } from 'react-router-dom';
 
+import { AccountBio } from '@/mastodon/components/account_bio';
 import CheckIcon from '@/material-icons/400-24px/check.svg?react';
 import LockIcon from '@/material-icons/400-24px/lock.svg?react';
 import MoreHorizIcon from '@/material-icons/400-24px/more_horiz.svg?react';
@@ -418,7 +419,7 @@ export const AccountHeader: React.FC<{
       return arr;
     }
 
-    if (signedIn && account.id !== me && !account.suspended) {
+    if (signedIn && !account.suspended) {
       arr.push({
         text: intl.formatMessage(messages.mention, {
           name: account.username,
@@ -442,37 +443,7 @@ export const AccountHeader: React.FC<{
       arr.push(null);
     }
 
-    if (account.id === me) {
-      arr.push({
-        text: intl.formatMessage(messages.edit_profile),
-        href: '/settings/profile',
-      });
-      arr.push({
-        text: intl.formatMessage(messages.preferences),
-        href: '/settings/preferences',
-      });
-      arr.push(null);
-      arr.push({
-        text: intl.formatMessage(messages.follow_requests),
-        to: '/follow_requests',
-      });
-      arr.push({
-        text: intl.formatMessage(messages.favourites),
-        to: '/favourites',
-      });
-      arr.push({ text: intl.formatMessage(messages.lists), to: '/lists' });
-      arr.push({
-        text: intl.formatMessage(messages.followed_tags),
-        to: '/followed_tags',
-      });
-      arr.push(null);
-      arr.push({ text: intl.formatMessage(messages.mutes), to: '/mutes' });
-      arr.push({ text: intl.formatMessage(messages.blocks), to: '/blocks' });
-      arr.push({
-        text: intl.formatMessage(messages.domain_blocks),
-        to: '/domain_blocks',
-      });
-    } else if (signedIn) {
+    if (signedIn) {
       if (relationship?.following) {
         if (!relationship.muting) {
           if (relationship.showing_reblogs) {
@@ -611,8 +582,7 @@ export const AccountHeader: React.FC<{
     }
 
     if (
-      (account.id !== me &&
-        (permissions & PERMISSION_MANAGE_USERS) === PERMISSION_MANAGE_USERS) ||
+      (permissions & PERMISSION_MANAGE_USERS) === PERMISSION_MANAGE_USERS ||
       (isRemote &&
         (permissions & PERMISSION_MANAGE_FEDERATION) ===
           PERMISSION_MANAGE_FEDERATION)
@@ -799,12 +769,11 @@ export const AccountHeader: React.FC<{
       <Icon
         id='lock'
         icon={LockIcon}
-        title={intl.formatMessage(messages.account_locked)}
+        aria-label={intl.formatMessage(messages.account_locked)}
       />
     );
   }
 
-  const content = { __html: account.note_emojified };
   const displayNameHtml = { __html: account.display_name_html };
   const fields = account.fields;
   const isLocal = !account.acct.includes('@');
@@ -880,12 +849,14 @@ export const AccountHeader: React.FC<{
             <div className='account__header__tabs__buttons'>
               {!hidden && bellBtn}
               {!hidden && shareBtn}
-              <Dropdown
-                disabled={menu.length === 0}
-                items={menu}
-                icon='ellipsis-v'
-                iconComponent={MoreHorizIcon}
-              />
+              {accountId !== me && (
+                <Dropdown
+                  disabled={menu.length === 0}
+                  items={menu}
+                  icon='ellipsis-v'
+                  iconComponent={MoreHorizIcon}
+                />
+              )}
               {!hidden && actionBtn}
             </div>
           </div>
@@ -926,12 +897,10 @@ export const AccountHeader: React.FC<{
                   <AccountNote accountId={accountId} />
                 )}
 
-                {account.note.length > 0 && account.note !== '<p></p>' && (
-                  <div
-                    className='account__header__content translate'
-                    dangerouslySetInnerHTML={content}
-                  />
-                )}
+                <AccountBio
+                  accountId={accountId}
+                  className='account__header__content'
+                />
 
                 <div className='account__header__fields'>
                   <dl>
