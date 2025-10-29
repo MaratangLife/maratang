@@ -35,7 +35,6 @@ import {
 import Status from 'flavours/glitch/components/status';
 import { deleteModal } from 'flavours/glitch/initial_state';
 import { makeGetStatus, makeGetPictureInPicture } from 'flavours/glitch/selectors';
-import { isFeatureEnabled } from 'flavours/glitch/utils/environment';
 
 import { setStatusQuotePolicy } from '../actions/statuses_typed';
 
@@ -85,9 +84,7 @@ const mapDispatchToProps = (dispatch, { contextType }) => ({
   },
   
   onQuote (status) {
-    if (isFeatureEnabled('outgoing_quotes')) {
-      dispatch(quoteComposeById(status.get('id')));
-    }
+    dispatch(quoteComposeById(status.get('id')));
   },
 
   onReblog (status, e) {
@@ -232,11 +229,10 @@ const mapDispatchToProps = (dispatch, { contextType }) => ({
     });
   },
 
-  onInteractionModal (type, status) {
+  onInteractionModal (status) {
     dispatch(openModal({
       modalType: 'INTERACTION',
       modalProps: {
-        type,
         accountId: status.getIn(['account', 'id']),
         url: status.get('uri'),
       },

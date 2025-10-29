@@ -198,18 +198,24 @@ export function directCompose(account) {
 }
 
 /**
+ * @callback ComposeSuccessCallback
+ * @param {Object} status
+ */
+
+/**
  * @param {null | string} overridePrivacy
- * @param {undefined | Function} successCallback
+ * @param {undefined | ComposeSuccessCallback} successCallback
  */
 export function submitCompose(overridePrivacy = null, successCallback = undefined) {
   return function (dispatch, getState) {
     let status     = getState().getIn(['compose', 'text'], '');
     const media    = getState().getIn(['compose', 'media_attachments']);
     const statusId = getState().getIn(['compose', 'id'], null);
+    const hasQuote = !!getState().getIn(['compose', 'quoted_status_id']);
     const spoilers = getState().getIn(['compose', 'spoiler']) || getState().getIn(['local_settings', 'always_show_spoilers_field']);
-    let spoilerText = spoilers ? getState().getIn(['compose', 'spoiler_text'], '') : '';
+    const spoiler_text = spoilers ? getState().getIn(['compose', 'spoiler_text'], '') : '';
 
-    if ((!status || !status.length) && media.size === 0) {
+    if (!(status?.length || media.size !== 0 || (hasQuote && spoiler_text?.length))) {
       return;
     }
 
@@ -245,12 +251,12 @@ export function submitCompose(overridePrivacy = null, successCallback = undefine
       method: statusId === null ? 'post' : 'put',
       data: {
         status,
+        spoiler_text,
         content_type: getState().getIn(['compose', 'content_type']),
         in_reply_to_id: getState().getIn(['compose', 'in_reply_to'], null),
         media_ids: media.map(item => item.get('id')),
         media_attributes,
-        sensitive: getState().getIn(['compose', 'sensitive']) || (spoilerText.length > 0 && media.size !== 0),
-        spoiler_text: spoilerText,
+        sensitive: getState().getIn(['compose', 'sensitive']) || (spoiler_text.length > 0 && media.size !== 0),
         visibility: visibility,
         poll: getState().getIn(['compose', 'poll'], null),
         language: getState().getIn(['compose', 'language']),
@@ -652,6 +658,7 @@ export function fetchComposeSuggestions(token) {
       fetchComposeSuggestionsEmojis(dispatch, getState, token);
       break;
     case '#':
+    case '＃':
       fetchComposeSuggestionsTags(dispatch, getState, token);
       break;
     default:
@@ -693,11 +700,11 @@ export function selectComposeSuggestion(position, token, suggestion, path) {
 
       dispatch(useEmoji(suggestion));
     } else if (suggestion.type === 'hashtag') {
-      completion    = `#${suggestion.name}`;
-      startPosition = position - 1;
+      completion    = suggestion.name.slice(token.length - 1);
+      startPosition = position + token.length;
     } else if (suggestion.type === 'account') {
-      completion    = getState().getIn(['accounts', suggestion.id, 'acct']);
-      startPosition = position;
+      completion    = `@${getState().getIn(['accounts', suggestion.id, 'acct'])}`;
+      startPosition = position - 1;
     }
 
     // We don't want to replace hashtags that vary only in case due to accessibility, but we need to fire off an event so that

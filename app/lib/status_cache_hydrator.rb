@@ -61,6 +61,7 @@ class StatusCacheHydrator
       payload[:filtered]   = payload[:reblog][:filtered]
       payload[:favourited] = payload[:reblog][:favourited]
       payload[:reblogged]  = payload[:reblog][:reblogged]
+      payload[:quote_approval] = payload[:reblog][:quote_approval]
     end
   end
 
@@ -97,7 +98,7 @@ class StatusCacheHydrator
         if quote.quoted_status.nil?
           payload[nested ? :quoted_status_id : :quoted_status] = nil
           payload[:state] = 'deleted'
-        elsif StatusFilter.new(quote.quoted_status, Account.find_by(id: account_id)).filtered?
+        elsif StatusFilter.new(quote.quoted_status, Account.find_by(id: account_id)).filtered_for_quote?
           payload[nested ? :quoted_status_id : :quoted_status] = nil
           payload[:state] = 'unauthorized'
         else
