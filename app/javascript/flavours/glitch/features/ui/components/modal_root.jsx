@@ -22,11 +22,10 @@ import {
   AnnualReportModal,
 } from 'flavours/glitch/features/ui/util/async-components';
 
-import BundleContainer from '../containers/bundle_container';
-
 import { ActionsModal } from './actions_modal';
 import AudioModal from './audio_modal';
 import { BoostModal } from './boost_modal';
+import Bundle from './bundle';
 import {
   ConfirmationModal,
   ConfirmDeleteStatusModal,
@@ -94,6 +93,7 @@ export const MODAL_COMPONENTS = {
   'IGNORE_NOTIFICATIONS': IgnoreNotificationsModal,
   'ANNUAL_REPORT': AnnualReportModal,
   'COMPOSE_PRIVACY': () => Promise.resolve({ default: VisibilityModal }),
+  'ACCOUNT_FIELDS': () => import('flavours/glitch/features/account_timeline/components/fields_modal.tsx').then(module => ({ default: module.AccountFieldsModal })),
 };
 
 export default class ModalRoot extends PureComponent {
@@ -147,11 +147,11 @@ export default class ModalRoot extends PureComponent {
       <Base backgroundColor={backgroundColor} onClose={props && props.noClose ? this.noop : this.handleClose} noEsc={props ? props.noEsc : false} ignoreFocus={ignoreFocus}>
         {visible && (
           <>
-            <BundleContainer fetchComponent={MODAL_COMPONENTS[type]} loading={this.renderLoading} error={this.renderError} renderDelay={200}>
+            <Bundle key={type} fetchComponent={MODAL_COMPONENTS[type]} loading={this.renderLoading} error={this.renderError} renderDelay={200}>
               {(SpecificComponent) => {
                 return <SpecificComponent {...props} onChangeBackgroundColor={this.setBackgroundColor} onClose={this.handleClose} ref={this.setModalRef} />;
               }}
-            </BundleContainer>
+            </Bundle>
 
             <Helmet>
               <meta name='robots' content='noindex' />

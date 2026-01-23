@@ -2,6 +2,8 @@ import escapeTextContentForBrowser from 'escape-html';
 
 import { autoHideCW } from '../../utils/content_warning';
 
+import { importCustomEmoji } from './emoji';
+
 const domParser = new DOMParser();
 
 export function searchTextFromRawStatus (status) {
@@ -104,7 +106,7 @@ export function normalizeStatus(status, normalOldStatus, { settings, bogusQuoteP
   }
 
   if (normalOldStatus) {
-    normalStatus.quote_approval ||= normalOldStatus.quote_approval;
+    normalStatus.quote_approval ||= normalOldStatus.get('quote_approval');
 
     const list = normalOldStatus.get('media_attachments');
     if (normalStatus.media_attachments && list) {
@@ -142,6 +144,10 @@ export function normalizeAnnouncement(announcement) {
   const normalAnnouncement = { ...announcement };
 
   normalAnnouncement.contentHtml = normalAnnouncement.content;
+
+  if (normalAnnouncement.emojis) {
+    importCustomEmoji(normalAnnouncement.emojis);
+  }
 
   return normalAnnouncement;
 }
