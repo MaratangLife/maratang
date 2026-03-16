@@ -5,8 +5,10 @@
 .filterSelectButton {
   appearance: none;
   border: none;
+  color: inherit;
   background: none;
   padding: 8px 0;
+  font-size: 15px;
   font-weight: 500;
   display: flex;
   align-items: center;
@@ -24,7 +26,7 @@
 }
 
 .filterOverlay {
-  background: var(--color-bg-elevated);
+  background: var(--color-bg-primary);
   border-radius: 12px;
   box-shadow: var(--dropdown-shadow);
   min-width: 230px;
@@ -39,6 +41,11 @@
     cursor: pointer;
     display: flex;
     align-items: center;
+    font-size: 15px;
+  }
+
+  [data-color-scheme='dark'] & {
+    border: 1px solid var(--color-border-primary);
   }
 }
 
@@ -100,7 +107,7 @@
 
 .pinnedStatusHeader {
   display: grid;
-  grid-template-columns: max-content auto;
+  grid-template-columns: 1fr auto;
   grid-template-rows: 1fr 1fr;
   gap: 4px;
 
