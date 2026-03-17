@@ -64,6 +64,8 @@ module ThemeHelper
   end
 
   def color_scheme
+    return 'dark' if current_skin.include?('-default')
+
     current_user&.setting_color_scheme || 'auto'
   end
 
