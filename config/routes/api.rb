@@ -8,6 +8,7 @@ namespace :api, format: false do
   namespace :v1_alpha do
     resources :accounts, only: [] do
       resources :collections, only: [:index]
+      resources :in_collections, only: [:index]
     end
 
     resources :async_refreshes, only: :show
@@ -302,32 +303,20 @@ namespace :api, format: false do
       resources :ip_blocks, only: [:index, :show, :update, :create, :destroy]
 
       namespace :trends do
-        resources :tags, only: [:index] do
+        concern :approvable do
           member do
             post :approve
             post :reject
           end
         end
-        resources :links, only: [:index] do
-          member do
-            post :approve
-            post :reject
-          end
-        end
-        resources :statuses, only: [:index] do
-          member do
-            post :approve
-            post :reject
-          end
+        with_options only: [:index], concerns: :approvable do
+          resources :tags
+          resources :links
+          resources :statuses
         end
 
         namespace :links do
-          resources :preview_card_providers, only: [:index], path: :publishers do
-            member do
-              post :approve
-              post :reject
-            end
-          end
+          resources :preview_card_providers, only: [:index], path: :publishers, concerns: :approvable
         end
       end
 
