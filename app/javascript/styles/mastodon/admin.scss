@@ -15,7 +15,7 @@ $content-width: 840px;
   min-height: 100dvh;
   padding: env(safe-area-inset-top) env(safe-area-inset-right)
     env(safe-area-inset-bottom) env(safe-area-inset-left);
-  
+
   // Fix dropdown options being white-on-white in dark mode
   // https://github.com/mastodon/mastodon/issues/37332
   select option {
@@ -1131,10 +1131,6 @@ a.name-tag,
 
       &:hover {
         color: var(--color-text-brand);
-      }
-
-      .account-role {
-        vertical-align: middle;
       }
     }
 
