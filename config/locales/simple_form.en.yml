@@ -61,9 +61,9 @@ en:
         setting_default_quote_policy_private: Followers-only posts authored on Mastodon can't be quoted by others.
         setting_default_quote_policy_unlisted: When people quote you, their post will also be hidden from trending timelines.
         setting_default_sensitive: Sensitive media is hidden by default and can be revealed with a click
-        setting_display_media_default: Hide media marked as sensitive
-        setting_display_media_hide_all: Always hide media
-        setting_display_media_show_all: Always show media
+        setting_display_media_default: Warn before showing media marked as sensitive
+        setting_display_media_hide_all: Warn before showing all media
+        setting_display_media_show_all: Show all media without warning, including media marked as sensitive
         setting_emoji_style: How to display emojis. "Auto" will try using native emoji, but falls back to Twemoji for legacy browsers.
         setting_quick_boosting_html: When enabled, clicking on the %{boost_icon} Boost icon will immediately boost instead of opening the boost/quote dropdown menu. Relocates the quoting action to the %{options_icon} (Options) menu.
         setting_system_scrollbars_ui: Applies only to desktop browsers based on Safari and Chrome
@@ -160,6 +160,7 @@ en:
           other: We have to make sure you're at least %{count} to use %{domain}. We won't store this.
         role: The role controls which permissions the user has.
       user_role:
+        collection_limit: Limits the number of Collections that a single user with this role can create. Please note that when you decrease this number, users who are already at this limit will not lose any Collections. But they will not be able to create additional ones.
         color: Color to be used for the role throughout the UI, as RGB in hex format
         highlighted: This makes the role publicly visible
         name: Public name of the role, if role is set to be displayed as a badge
@@ -386,6 +387,7 @@ en:
         role: Role
         time_zone: Time zone
       user_role:
+        collection_limit: Maximum number of Collections per user
         color: Badge color
         highlighted: Display role as badge on user profiles
         name: Name
