@@ -19,7 +19,7 @@ FileUtils.chdir APP_ROOT do
 
   puts "\n== Installing JS dependencies =="
   system! 'export COREPACK_ENABLE_DOWNLOAD_PROMPT=0'
-  system! 'corepack enable'
+  system! 'npm i -g corepack'
   system! 'bin/yarn install --immutable'
 
   puts "\n== Preparing database =="

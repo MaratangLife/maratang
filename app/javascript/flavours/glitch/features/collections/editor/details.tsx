@@ -7,6 +7,8 @@ import { useHistory } from 'react-router-dom';
 import { isFulfilled } from '@reduxjs/toolkit';
 
 import { ComboboxMenuItem } from '@/flavours/glitch/components/form_fields/combobox_field';
+import { useAccount } from '@/flavours/glitch/hooks/useAccount';
+import { useCurrentAccountId } from '@/flavours/glitch/hooks/useAccountId';
 import { languages } from '@/flavours/glitch/initial_state';
 import {
   hasSpecialCharacters,
@@ -36,14 +38,24 @@ import {
 } from 'flavours/glitch/reducers/slices/collections';
 import { useAppDispatch, useAppSelector } from 'flavours/glitch/store';
 
+import { getCollectionPath } from '../utils';
+
 import classes from './styles.module.scss';
 import { WizardStepTitle } from './wizard_step_title';
 
 export const CollectionDetails: React.FC = () => {
   const dispatch = useAppDispatch();
   const history = useHistory();
-  const { id, name, description, topic, discoverable, sensitive, accountIds } =
-    useAppSelector((state) => state.collections.editor);
+  const {
+    id,
+    name,
+    description,
+    topic,
+    language,
+    discoverable,
+    sensitive,
+    items,
+  } = useAppSelector((state) => state.collections.editor);
 
   const handleNameChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -93,6 +105,9 @@ export const CollectionDetails: React.FC = () => {
     [dispatch],
   );
 
+  const accountId = useCurrentAccountId();
+  const { acct: currentUserName } = useAccount(accountId) ?? {};
+
   const handleSubmit = useCallback(
     (e: React.FormEvent) => {
       e.preventDefault();
@@ -103,6 +118,7 @@ export const CollectionDetails: React.FC = () => {
           name,
           description,
           tag_name: topic || null,
+          language: language || null,
           discoverable,
           sensitive,
         };
@@ -116,8 +132,11 @@ export const CollectionDetails: React.FC = () => {
           description,
           discoverable,
           sensitive,
-          account_ids: accountIds,
+          account_ids: items.map((item) => item.account_id),
         };
+        if (language) {
+          payload.language = language;
+        }
         if (topic) {
           payload.tag_name = topic;
         }
@@ -128,8 +147,8 @@ export const CollectionDetails: React.FC = () => {
           }),
         ).then((result) => {
           if (isFulfilled(result)) {
-            history.replace(`/collections`);
-            history.push(`/collections/${result.payload.collection.id}`, {
+            history.replace(`/@${currentUserName}/collections`);
+            history.push(getCollectionPath(result.payload.collection.id), {
               newCollection: true,
             });
           }
@@ -142,10 +161,12 @@ export const CollectionDetails: React.FC = () => {
       description,
       topic,
       discoverable,
+      language,
       sensitive,
       dispatch,
       history,
-      accountIds,
+      items,
+      currentUserName,
     ],
   );
 
@@ -384,12 +405,7 @@ const renderTagItem = (item: TagSearchResult) => (
 
 const LanguageField: React.FC = () => {
   const dispatch = useAppDispatch();
-  const initialLanguage = useAppSelector(
-    (state) => state.compose.get('default_language') as string,
-  );
   const { language } = useAppSelector((state) => state.collections.editor);
-
-  const selectedLanguage = language ?? initialLanguage;
 
   const handleLanguageChange = useCallback(
     (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -411,7 +427,7 @@ const LanguageField: React.FC = () => {
           defaultMessage='Language'
         />
       }
-      value={selectedLanguage}
+      value={language}
       onChange={handleLanguageChange}
     >
       <option value=''>
