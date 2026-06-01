@@ -841,9 +841,6 @@ ja:
           authenticated: ログイン済みユーザーのみ
           disabled: 特定ロールのユーザーのみ
           public: 制限なし
-      landing_page:
-        values:
-          trends: トレンド
       registrations:
         moderation_recommandation: 登録受付を開始する前に、迅速かつ適切にモデレーションを行うチームを編成しましょう！
         preamble: あなたのサーバー上でアカウントを作成できるユーザーを制御します。
@@ -1870,7 +1867,7 @@ ja:
       private: フォロワーのみ
       public: 公開
       public_long: すべての人 (Mastodon以外も含む)
-      unlisted: 非表示
+      unlisted: ひかえめな公開
       unlisted_long: Mastodonの検索結果、トレンド、公開タイムラインに表示しない
   statuses_cleanup:
     enabled: 古い投稿を自動的に削除する

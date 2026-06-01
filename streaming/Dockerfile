@@ -32,20 +32,18 @@ ARG GID="991"
 
 # Apply Mastodon build options based on options above
 ENV \
-  # Apply Mastodon version information
   MASTODON_VERSION_PRERELEASE="${MASTODON_VERSION_PRERELEASE}" \
   MASTODON_VERSION_METADATA="${MASTODON_VERSION_METADATA}" \
-  # Apply timezone
   TZ=${TZ}
 
+# Configure the IP to bind Mastodon to when serving traffic
+# Explicitly set PORT to match the exposed port
+# Use production settings for Yarn, Node and related nodejs based tools
+# Add Ruby and Mastodon installation to the PATH
 ENV \
-  # Configure the IP to bind Mastodon to when serving traffic
   BIND="0.0.0.0" \
-  # Explicitly set PORT to match the exposed port
   PORT=4000 \
-  # Use production settings for Yarn, Node and related nodejs based tools
   NODE_ENV="production" \
-  # Add Ruby and Mastodon installation to the PATH
   DEBIAN_FRONTEND="noninteractive"
 
 # Set default shell used for running commands
@@ -96,8 +94,8 @@ RUN \
   # Configure Corepack
   rm /usr/local/bin/yarn*; \
   export COREPACK_ENABLE_DOWNLOAD_PROMPT=0; \
-  corepack enable; \
-  corepack prepare --activate;
+  # Install Corepack
+  npm i -g corepack;
 
 RUN \
   # Mount Corepack and Yarn caches from Docker buildx caches
