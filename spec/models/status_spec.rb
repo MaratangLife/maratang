@@ -259,6 +259,13 @@ RSpec.describe Status do
 
           expect(subject).to be_local_only
         end
+
+        it 'recognizes the legacy eye emoji' do
+          subject.text = 'A toot 👁'
+          subject.save!
+
+          expect(subject).to be_local_only
+        end
       end
 
       context 'when the status is remote' do
