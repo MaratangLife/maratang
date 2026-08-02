@@ -10,8 +10,6 @@ class ActivityPub::Activity::Accept < ActivityPub::Activity
     case @object['type']
     when 'Follow'
       accept_embedded_follow
-    when 'QuoteRequest'
-      accept_embedded_quote_request
     end
   end
 
@@ -35,16 +33,6 @@ class ActivityPub::Activity::Accept < ActivityPub::Activity
     RemoteAccountRefreshWorker.perform_async(request.target_account_id) if is_first_follow
   end
 
-  def accept_embedded_quote_request
-    approval_uri = value_or_id(first_of_value(@json['result']))
-    return if approval_uri.nil?
-
-    quote = quote_from_request_json(@object)
-    return unless quote.present? && quote.status.local?
-
-    accept_quote!(quote)
-  end
-
   def accept_feature_request!
     approval_uri = value_or_id(first_of_value(@json['result']))
     return if approval_uri.nil? || unsupported_uri_scheme?(approval_uri) || non_matching_uri_hosts?(approval_uri, @account.uri)
@@ -53,7 +41,7 @@ class ActivityPub::Activity::Accept < ActivityPub::Activity
     collection_item.update!(approval_uri:, state: :accepted)
 
     activity_json = ActiveModelSerializers::SerializableResource.new(collection_item, serializer: ActivityPub::AddFeaturedItemSerializer, adapter: ActivityPub::Adapter).to_json
-    ActivityPub::AccountRawDistributionWorker.perform_async(activity_json, collection_item.collection.account_id)
+    ActivityPub::CollectionRawDistributionWorker.perform_async(activity_json, collection_item.collection_id)
   end
 
   def accept_quote!(quote)
