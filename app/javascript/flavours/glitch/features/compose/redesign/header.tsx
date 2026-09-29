@@ -6,7 +6,7 @@ import { ArrowsOutSimpleIcon, MinusIcon, XIcon } from '@phosphor-icons/react';
 
 import { IconButton } from '@/flavours/glitch/components/button/redesign';
 import {
-  hideComposer,
+  closeComposer,
   minimizeComposerToggle,
   selectIsMinimized,
 } from '@/flavours/glitch/reducers/slices/composer';
@@ -33,16 +33,28 @@ const messages = defineMessages({
     defaultMessage: 'New reply',
   },
   replyEdit: {
-    id: 'compose_form.reply.title.edit',
+    id: 'compose.reply.title.edit',
     defaultMessage: 'Edit reply',
+  },
+  replyPrivateNew: {
+    id: 'compose.reply_private.title.new',
+    defaultMessage: 'New private reply',
+  },
+  replyPrivateEdit: {
+    id: 'compose.reply_private.title.edit',
+    defaultMessage: 'Edit private reply',
   },
   messageNew: {
     id: 'compose_form.message.title.new',
     defaultMessage: 'New message',
+    description:
+      'Message refers to a direct message. For languages where this is confusing, "chat" or "direct message" can be used.',
   },
   messageEdit: {
     id: 'compose_form.message.title.edit',
     defaultMessage: 'Edit message',
+    description:
+      'Message refers to a direct message. For languages where this is confusing, "chat" or "direct message" can be used.',
   },
 });
 
@@ -58,13 +70,14 @@ export const ComposeFormHeader: React.FC<{
   noMinimize?: boolean;
 }> = ({ id, noMinimize }) => {
   const intl = useIntl();
+  const dispatch = useAppDispatch();
   const titleMessage = useAppSelector(selectComposeFormTitle);
   const isMinimized = useAppSelector(selectIsMinimized);
 
-  const dispatch = useAppDispatch();
   const onClose = useCallback(() => {
-    dispatch(hideComposer());
+    dispatch(closeComposer());
   }, [dispatch]);
+
   const onMinimize = useCallback(() => {
     dispatch(minimizeComposerToggle());
   }, [dispatch]);
